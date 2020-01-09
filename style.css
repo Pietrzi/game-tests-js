@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+}
+
+.container {
+    width: 80%;
+    margin: 50px auto;
+}
+
+.pojemnik-stany {
+    display: flex;
+}
+
+
+.budynki {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.budynek {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stan-surowca {
+    height: 20px;
+    width: 40px;
+    margin: 20px;
+    border: solid 1px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nazwa-budynku {
+    height: 100px;
+    width: 150px;
+    margin: 0 10px;
+    border: solid 1px black;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* 
+#zbuduj {
+    margin-bottom: 10px;
+}
+
+#rozbuduj {
+    margin-bottom: 10px;
+} */
