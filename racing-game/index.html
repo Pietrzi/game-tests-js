@@ -41,6 +41,11 @@
 		
 		var canvas, canvasContext;
 		
+		const KEY_LEFT_ARROW = 37;
+		const KEY_UP_ARROW = 38;
+		const KEY_RIGHT_ARROW = 39;
+		const KEY_DOWN_ARROW = 40;
+		
 		var mouseX = 0;
 		var mouseY = 0;
 		
@@ -58,6 +63,14 @@
 			carSpeedY = -4;*/
 		}
 		
+		function keyPressed(evt) {
+			console.log("Key pressed: "+evt.keyCode);
+		}
+		
+		function keyReleased(evt) {
+			console.log("Key pressed: "+evt.keyCode);
+		}
+		
 		window.onload = function() {
 			canvas = document.getElementById('gameCanvas');
 			canvasContext = canvas.getContext('2d');
@@ -66,6 +79,9 @@
 			setInterval(updateAll, 1000/framesPerSecond);
 		
 			canvas.addEventListener('mousemove', updateMousePos);
+		
+			document.addEventListener('keydown', keyPressed);
+			document.addEventListener('keyup', keyReleased);
 		
 			carPic.onload = function() {
 				carPicLoaded = true;
