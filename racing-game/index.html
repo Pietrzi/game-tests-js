@@ -133,6 +133,7 @@
 					var arrayIndex = rowColToArrayIndex(eachCol, eachRow); 
 					if(trackGrid[arrayIndex] == 2) {
 						trackGrid[arrayIndex] = 0;
+						carAng = -Math.PI/2;
 						carX = eachCol * TRACK_W + TRACK_W/2;
 						carY = eachRow * TRACK_H + TRACK_H/2;
 					}
@@ -141,8 +142,10 @@
 		}
 		
 		function carMove() {
+			carSpeed *= 0.97;
+		
 			if(keyHeld_Gas) {
-				carSpeed += 0.2;
+				carSpeed += 0.3;
 			}
 			if(keyHeld_Reverse) {
 				carSpeed -= 0.2;
@@ -177,7 +180,12 @@
 				carTrackRow >= 0 && carTrackRow < TRACK_ROWS) {
 		
 				if(isTrackAtColRow( carTrackCol,carTrackRow )) {
-					carSpeed *= -1;
+					// next two lines added to fix a bug, mentioned in video 9.6
+					// undoes the car movement which got it onto the wall
+					carX -= Math.cos(carAng) * carSpeed;
+					carY -= Math.sin(carAng) * carSpeed;
+		
+					carSpeed *= -0.5;
 				} // end of track found
 			} // end of valid col and row
 		} // end of carTrackHandling func
