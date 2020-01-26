@@ -19,12 +19,12 @@ function beginLoadingImage(imgVar, fileName) {
 
 function loadImages() {
 	// next line is just an example, not using, will remove later
-	var dataSet = {varName: carPic, theFile: "player1car.png"};
+	var dataSet = {varName: carPic, theFile: "images/player1car.png"};
 
 	var imageList = [
-		{varName: carPic, theFile: "player1car.png"},
-		{varName: roadPic, theFile: "track_road.png"},
-		{varName: wallPic, theFile: "track_wall.png"}
+		{varName: carPic, theFile: "images/player1car.png"},
+		{varName: roadPic, theFile: "images/track_road.png"},
+		{varName: wallPic, theFile: "images/track_wall.png"}
 		];
 
 	picsToLoad = imageList.length;
