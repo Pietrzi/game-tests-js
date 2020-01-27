@@ -5,13 +5,32 @@ const TURN_RATE = 0.06;
 const MIN_SPEED_TO_TURN = 0.5;
 
 function carClass() {
-
 	this.x = 75;
 	this.y = 75;
 	this.ang = 0;
 	this.speed = 0;
+	this.myCarPic; // which picture to use
 
-	this.reset = function() {
+	this.keyHeld_Gas = false;
+	this.keyHeld_Reverse = false;
+	this.keyHeld_TurnLeft = false;
+	this.keyHeld_TurnRight = false;
+
+	this.controlKeyUp;
+	this.controlKeyRight;
+	this.controlKeyDown;
+	this.controlKeyLeft;
+
+	this.setupInput = function(upKey, rightKey, downKey, leftKey) {
+		this.controlKeyUp = upKey;
+		this.controlKeyRight = rightKey;
+		this.controlKeyDown = downKey;
+		this.controlKeyLeft = leftKey;
+	}
+
+	this.reset = function(whichImage) {
+		this.myCarPic = whichImage;
+
 		for(var eachRow=0;eachRow<TRACK_ROWS;eachRow++) {
 			for(var eachCol=0;eachCol<TRACK_COLS;eachCol++) {
 				var arrayIndex = rowColToArrayIndex(eachCol, eachRow); 
@@ -20,6 +39,7 @@ function carClass() {
 					this.ang = -Math.PI/2;
 					this.x = eachCol * TRACK_W + TRACK_W/2;
 					this.y = eachRow * TRACK_H + TRACK_H/2;
+					return;
 				} // end of player start if
 			} // end of col for
 		} // end of row for
@@ -28,26 +48,28 @@ function carClass() {
 	this.move = function() {
 		this.speed *= GROUNDSPEED_DECAY_MULT;
 
-		if(keyHeld_Gas) {
+		if(this.keyHeld_Gas) {
 			this.speed += DRIVE_POWER;
 		}
-		if(keyHeld_Reverse) {
+		if(this.keyHeld_Reverse) {
 			this.speed -= REVERSE_POWER;
 		}
 		if(Math.abs(this.speed) > MIN_SPEED_TO_TURN) {
-			if(keyHeld_TurnLeft) {
+			if(this.keyHeld_TurnLeft) {
 				this.ang -= TURN_RATE;
 			}
-			if(keyHeld_TurnRight) {
+			if(this.keyHeld_TurnRight) {
 				this.ang += TURN_RATE;
 			}
 		}
 
 		this.x += Math.cos(this.ang) * this.speed;
 		this.y += Math.sin(this.ang) * this.speed;
+
+		carTrackHandling(this);
 	}
 
 	this.draw = function() {
-		drawBitmapCenteredWithRotation(carPic, this.x,this.y, this.ang);
+		drawBitmapCenteredWithRotation(this.myCarPic, this.x,this.y, this.ang);
 	}
 }
