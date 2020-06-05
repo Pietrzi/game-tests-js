@@ -5,6 +5,7 @@ class GameScene extends Phaser.Scene {
 
     init() {
         this.scene.launch('Ui');
+        this.score = 0;
     }
 
     create() {
@@ -34,7 +35,33 @@ class GameScene extends Phaser.Scene {
     }
 
     createChests() {
-        this.chest = new Chest(this, 300, 300, 'items', 0);
+        // create a chest group
+        this.chests = this.physics.add.group();
+        // chest positions arry
+        this.chestPositions = [[100,100], [200,200], [300,300], [400,400], [500,500]]
+        // max numbers of chests
+        this.maxNumberOfChests = 3;
+        // spawn a chest
+        for (let i = 0; i < this.maxNumberOfChests; i += 1) {
+            this.spawnChest();
+        }
+        // this is how we did 1 chest
+        this.spawnChest();
+    }
+
+    spawnChest() {
+        const location = this.chestPositions[Math.floor(Math.random() * this.chestPositions.length)];
+
+        let chest = this.chests.getFirstDead();
+        console.log(chest)
+        if (!chest) {
+            const chest = new Chest(this, location[0], location[1], 'items', 0);
+            this.chests.add(chest);
+        } else {
+            chest.setPosition(location[0], location[1]);
+            chest.makeActive();
+        }
+        
     }
 
     createWalls() {
@@ -48,12 +75,17 @@ class GameScene extends Phaser.Scene {
 
     addCollisions() {
         this.physics.add.collider(this.player, this.wall)
-        this.physics.add.overlap(this.player, this.chest, this.collectChest, null, this)
+        this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this)
     }
 
     collectChest(player, chest) {
+        // play pick gold sound
         this.goldPickupAudio.play();
-        this.events.emit('updateScore', chest.coins)
-        chest.destroy();
+        // update score
+        this.score += chest.coins
+        this.events.emit('updateScore', this.score); // updatescore in Ui
+        // make chest object inactive
+        chest.makeInactive();
+        this.time.delayedCall(1000, this.spawnChest, [], this) // phaser time event
     }
 }
