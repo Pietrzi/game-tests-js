@@ -20,7 +20,7 @@ class UiButton extends Phaser.GameObjects.Container {
 
         this.button.setScale(1.4)
 
-        this.buttonText = this.scene.add.text(0, 0, 'Start', { fontSize: '26px', fill: '#fff' });
+        this.buttonText = this.scene.add.text(0, 0, this.text, { fontSize: '26px', fill: '#fff' });
         Phaser.Display.Align.In.Center(this.buttonText, this.button);
 
         // dodać dwa obiekty do kontenera
@@ -29,6 +29,7 @@ class UiButton extends Phaser.GameObjects.Container {
 
         this.button.on('pointerdown', () => {
             this.targetCallback
+            console.log('clickUiB')
         });
 
         this.button.on('pointerover', () => {
