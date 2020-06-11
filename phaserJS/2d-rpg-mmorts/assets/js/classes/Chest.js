@@ -12,13 +12,13 @@ class Chest extends Phaser.Physics.Arcade.Image {
 
     makeActive() {
         this.setActive(true);
-        this.setVissible(true);
+        this.setVisible(true);
         this.body.checkCollision.none = false;
     }
 
     makeInactive() {
         this.setActive(false);
-        this.setVissible(false);
+        this.setVisible(false);
         this.body.checkCollision.none = true;
     }
 }

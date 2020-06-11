@@ -28,7 +28,7 @@ class UiButton extends Phaser.GameObjects.Container {
         this.add(this.buttonText);
 
         this.button.on('pointerdown', () => {
-            this.targetCallback
+            this.targetCallback();
             console.log('clickUiB')
         });
 
