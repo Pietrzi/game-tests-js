@@ -14,6 +14,8 @@ class Player extends Phaser.Physics.Arcade.Image {
         this.setCollideWorldBounds(true);
         // dodać player do sceny
         this.scene.add.existing(this);
+        // camera follow player
+        this.scene.cameras.main.startFollow(this);
     }
 
     update(cursors) {
