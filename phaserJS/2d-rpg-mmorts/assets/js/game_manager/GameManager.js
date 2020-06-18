@@ -5,6 +5,7 @@ class GameManager {
 
         this.spawners = {};
         this.chests = {};
+        this.monsters = {};
 
         this.playerLocations = [];
         this.chestLocations = {};
@@ -19,34 +20,55 @@ class GameManager {
     }
 
     parseMapData() {
-        // console.log(this.mapData);
-        this.mapData.forEach(layer => {
-            if(layer.name === 'player_locations') {
-                layer.objects.forEach(obj => {
-                    this.playerLocations.push([obj.x, obj.y]);
-                });
-            } else if (layer.name === 'chest_locations') {
-                layer.objects.forEach(obj => {
-                    if (this.chestLocations[obj.properties.spawner]) {
-                        this.chestLocations[obj.properties.spawner].push([obj.x, obj.y]);
-                    } else {
-                        this.chestLocations[obj.properties.spawner] = [[obj.x, obj.y]];
-                    }
-                });
-            } else if (layer.name === 'monster_locations') {
-                layer.objects.forEach(obj => {
-                    if (this.monsterLocations[obj.properties.spawner]) {
-                        this.monsterLocations[obj.properties.spawner].push([obj.x, obj.y]);
-                    } else {
-                        this.monsterLocations[obj.properties.spawner] = [[obj.x, obj.y]];
-                    }
-                });
-            }
-        });
+        // this.mapData.forEach(layer => {
+        //     if(layer.name === 'player_locations') {
+        //         layer.objects.forEach(obj => {
+        //             this.playerLocations.push([obj.x, obj.y]);
+        //         });
+        //     } else if (layer.name === 'chest_locations') {
+        //         layer.objects.forEach(obj => {
+        //             if (this.chestLocations[obj.properties.spawner]) {
+        //                 this.chestLocations[obj.properties.spawner].push([obj.x, obj.y]);
+        //             } else {
+        //                 this.chestLocations[obj.properties.spawner] = [[obj.x, obj.y]];
+        //             }
+        //         });
+        //     } else if (layer.name === 'monster_locations') {
+        //         layer.objects.forEach(obj => {
+        //             if (this.monsterLocations[obj.properties.spawner]) {
+        //                 this.monsterLocations[obj.properties.spawner].push([obj.x, obj.y]);
+        //             } else {
+        //                 this.monsterLocations[obj.properties.spawner] = [[obj.x, obj.y]];
+        //             }
+        //         });
+        //     }
+        // });
 
-        // console.log(this.playerLocations);
-        // console.log(this.monsterLocations);
-        // console.log(this.chestLocations);
+        // from the file
+
+        this.mapData.forEach((layer) => {
+            if (layer.name === 'player_locations') {
+              layer.objects.forEach((obj) => {
+                this.playerLocations.push([obj.x + (obj.width / 2), obj.y - (obj.height / 2)]);
+              });
+            } else if (layer.name === 'chest_locations') {
+              layer.objects.forEach((obj) => {
+                if (this.chestLocations[obj.properties.spawner]) {
+                  this.chestLocations[obj.properties.spawner].push([obj.x + (obj.width / 2), obj.y - (obj.height / 2)]);
+                } else {
+                  this.chestLocations[obj.properties.spawner] = [[obj.x + (obj.width / 2), obj.y - (obj.height / 2)]];
+                }
+              });
+            } else if (layer.name === 'monster_locations') {
+              layer.objects.forEach((obj) => {
+                if (this.monsterLocations[obj.properties.spawner]) {
+                  this.monsterLocations[obj.properties.spawner].push([obj.x + (obj.width / 2), obj.y - (obj.height / 2)]);
+                } else {
+                  this.monsterLocations[obj.properties.spawner] = [[obj.x + (obj.width / 2), obj.y - (obj.height / 2)]];
+                }
+              });
+            }
+          });
     }
 
     setupEventListeners() {
@@ -59,16 +81,20 @@ class GameManager {
     }
 
     setupSpawners() {
+        const config = {
+            spawnInterval: 3000,
+            limit: 3,
+            spawnerType: SpawnerType.CHEST,
+            id: '',
+        };
+
+        let spawner;
+
         // create chest spawners
         Object.keys(this.chestLocations).forEach( key => {
-            const config = {
-                spawnInterval: 3000,
-                limit: 3,
-                spawnerType: SpawnerType.CHEST,
-                id: `chest-${key}`,
-            };
+            config.id = `chest-${key}`;
 
-            const spawner = new Spawner(
+            spawner = new Spawner(
                 config,
                 this.chestLocations[key],
                 this.addChest.bind(this),
@@ -76,6 +102,21 @@ class GameManager {
             );
             this.spawners[spawner.id] = spawner;
         });
+
+        // create monster spawners
+        Object.keys(this.monsterLocations).forEach( key => {
+            config.id = `monster-${key}`;
+            config.spawnerType = SpawnerType.MONSTER;
+
+            spawner = new Spawner(
+                config,
+                this.monsterLocations[key],
+                this.addMonster.bind(this),
+                this.deleteMonster.bind(this)
+            );
+            this.spawners[spawner.id] = spawner;
+        });
+
     }
 
     spawnPlayer() {
@@ -90,5 +131,14 @@ class GameManager {
 
     deleteChest(chestId) {
         delete this.chests[chestId];
+    }
+
+    addMonster(monsterId, monster) {
+        this.monsters[monsterId] = monster;
+        this.scene.events.emit('monterSpawned', monster);
+    }
+
+    deleteMonster(monsterId) {
+        delete this.monters[monsterId]
     }
 }
