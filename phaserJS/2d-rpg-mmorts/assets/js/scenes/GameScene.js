@@ -31,12 +31,22 @@ class GameScene extends Phaser.Scene {
     createGroups() {
         // create a chest group
         this.chests = this.physics.add.group();
+        // create a monster group
+        this.monsters = this.physics.add.group();
     }
 
     spawnChest(chestObject) {
         let chest = this.chests.getFirstDead();
         if (!chest) {
-            const chest = new Chest(this, chestObject.x * 2, chestObject.y * 2, 'items', 0, chestObject.gold, chestObject.id);
+            chest = new Chest(
+                this, 
+                chestObject.x * 2, 
+                chestObject.y * 2, 
+                'items', 
+                0, 
+                chestObject.gold,
+                 chestObject.id
+            );
             this.chests.add(chest);
         } else {
             chest.coins = chestObject.gold;
@@ -44,11 +54,30 @@ class GameScene extends Phaser.Scene {
             chest.setPosition(chestObject.x * 2, chestObject.y * 2);
             chest.makeActive();
         }
-        
     }
 
     spawnMonster(monster) {
-        console.log(monster);
+        let monster = this.monsters.getFirstDead();
+        if (!monster) {
+            monster = new Monster(
+                this, 
+                monsterObject.x * 2, 
+                monsterObject.y * 2,
+                'monsters', 
+                monsterObject.frame,
+                monsterObject.id,
+                monsterObject.health,
+                monsterObject.maxHealth,
+            );
+            this.monsters.add(monster);
+        } else {
+            monster.id = monsterObject.id;
+            monster.health = monsterObject.health;
+            monster.maxHealth = monsterObject.maxHealth;
+            monster.setTexture('monsters', monsterObject.frame);
+            monster.setPosition(monsterObject.x * 2, monsterObject.y * 2);
+            monster.makeActive();
+        }
     }
 
     createInput() {
