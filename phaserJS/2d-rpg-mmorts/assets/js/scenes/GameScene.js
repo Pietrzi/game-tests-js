@@ -56,7 +56,7 @@ class GameScene extends Phaser.Scene {
         }
     }
 
-    spawnMonster(monster) {
+    spawnMonster(monsterObject) {
         let monster = this.monsters.getFirstDead();
         if (!monster) {
             monster = new Monster(
