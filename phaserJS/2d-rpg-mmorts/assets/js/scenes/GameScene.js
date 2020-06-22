@@ -25,7 +25,7 @@ class GameScene extends Phaser.Scene {
     }
 
     createPlayer(location) {
-        this.player = new Player(this, location[0] * 2, location[1] * 2, 'characters', 0);
+        this.player = new PlayerContainer(this, location[0] * 2, location[1] * 2, 'characters', 0);
     }
 
     createGroups() {
@@ -86,9 +86,18 @@ class GameScene extends Phaser.Scene {
 
     addCollisions() {
         // check for collisions between player and block layer
-        this.physics.add.collider(this.player, this.map.blockedLayer)
+        this.physics.add.collider(this.player, this.map.blockedLayer);
         // check for overlap between player and chest game objects
-        this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this)
+        this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
+        // check for collisions between monsters and block layer
+        this.physics.add.collider(this.monsters, this.map.blockedLayer);
+        // ovelap for monsters and mplayer
+        this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
+    }
+
+    enemyOverlap(player, enemy) {
+        enemy.makeInactive();
+        this.events.emit('destroyEnemy', enemy.id)
     }
 
     collectChest(player, chest) {

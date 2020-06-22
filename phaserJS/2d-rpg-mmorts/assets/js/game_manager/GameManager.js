@@ -73,11 +73,18 @@ class GameManager {
 
     setupEventListeners() {
         this.scene.events.on('pickUpChest', chestId => {
-            // update tghe spawer
+            // update the spawer
             if (this.chests[chestId]) {
                 this.spawners[this.chests[chestId].spawnerId].removeObject(chestId)
             }
         });
+
+        this.scene.events.on('destroyEnemy', monsterId => {
+          // update the spawer
+          if (this.monsters[monsterId]) {
+              this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId)
+          }
+      });
     }
 
     setupSpawners() {
@@ -135,10 +142,10 @@ class GameManager {
 
     addMonster(monsterId, monster) {
         this.monsters[monsterId] = monster;
-        this.scene.events.emit('monterSpawned', monster);
+        this.scene.events.emit('monsterSpawned', monster);
     }
 
     deleteMonster(monsterId) {
-        delete this.monters[monsterId]
+        delete this.monsters[monsterId]
     }
 }
