@@ -10,9 +10,9 @@ class PlayerContainer extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.scene = scene; // the scene this game object will be added to
         this.velocity = 160; // vleocity of player movement
-        this.cuurentDirection = Direction.RIGHT;
+        this.currentDirection = Direction.RIGHT;
         this.playerAttacking = false;
-        this. flipX = true;
+        this.flipX = true;
         this.swordHit = false;
 
         // set size on container
@@ -36,7 +36,7 @@ class PlayerContainer extends Phaser.GameObjects.Container {
         this.weapon.setScale(1.5);
         this.scene.physics.world.enable(this.weapon);
         this.add(this.weapon);
-        this.weapon.alpha = 1;
+        this.weapon.alpha = 0;
     }
 
     update(cursors) {
@@ -44,7 +44,7 @@ class PlayerContainer extends Phaser.GameObjects.Container {
     
         if (cursors.left.isDown) {
             this.body.setVelocityX(-this.velocity);
-            this.cuurentDirection = Direction.LEFTl;
+            this.cuurentDirection = Direction.LEFT;
             this.weapon.setPosition(-40, 0);
         } else if (cursors.right.isDown) {
             this.body.setVelocityX(this.velocity);
@@ -54,23 +54,44 @@ class PlayerContainer extends Phaser.GameObjects.Container {
     
         if (cursors.up.isDown) {
             this.body.setVelocityY(-this.velocity);
-            this.cuurentDirection = Direction.UP;
+            this.currentDirection = Direction.UP;
             this.weapon.setPosition(0, -40);
         } else if (cursors.down.isDown) {
             this.body.setVelocityY(this.velocity);
-            this.cuurentDirection = Direction.DOWN;
+            this.currentDirection = Direction.DOWN;
             this.weapon.setPosition(0, 40);
         }
 
+        if (Phaser.Input.Keyboard.JustDown(cursors.space) && !this.playerAttacking) {
+            this.weapon.alpha = 1;
+            this.playerAttacking = true;
+            this.scene.time.delayedCall(150, () => {
+                this.weapon.alpha = 0;
+                this.playerAttacking = false;
+                this.swordHit = false;
+            }, [], this);
+        }
+
         if (this.playerAttacking) {
+            if (this.weapon.flipX) {
+                this.weapon.angle -= 10;
+            } else {
+                this.weapon.angle += 10;
+            }
 
         } else {
-            if (this.cuurentDirection === Direction.DOWN) {
+            if (this.currentDirection === Direction.DOWN) {
                 this.weapon.setAngle(-270);
-            } else if (this.cuurentDirection === Direction.UP) {
+            } else if (this.currentDirection === Direction.UP) {
                 this.weapon.setAngle(-90);
             } else {
                 this.weapon.setAngle(0);
+            }
+
+            this.weapon.flipX = false;
+            if (this.currentDirection === Direction.LEFT) {
+                this.weapon.flipX = true;
+                console.log('l')
             }
         }
     }
