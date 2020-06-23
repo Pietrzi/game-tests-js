@@ -1,9 +1,12 @@
-import * as Phaser from 'phaser';
-import Player from './Player';
-import Direction from '../../utils/direction';
+const Direction = {
+  RIGHT: 'RIGHT',
+  LEFT: 'LEFT',
+  UP: 'UP',
+  DOWN: 'Down'
+}
 
-export default class PlayerContainer extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, key, frame, health, maxHealth, id, attackAudio, mainPlayer) {
+class PlayerContainer extends Phaser.GameObjects.Container {
+  constructor(scene, x, y, key, frame, health, maxHealth, id, attackAudio) {
     super(scene, x, y);
     this.scene = scene; // the scene this container will be added to
     this.velocity = 160; // the velocity when moving our player
@@ -15,7 +18,6 @@ export default class PlayerContainer extends Phaser.GameObjects.Container {
     this.maxHealth = maxHealth;
     this.id = id;
     this.attackAudio = attackAudio;
-    this.mainPlayer = mainPlayer;
 
     // set a size on the container
     this.setSize(64, 64);
@@ -74,7 +76,6 @@ export default class PlayerContainer extends Phaser.GameObjects.Container {
   update(cursors) {
     this.body.setVelocity(0);
 
-    if (this.mainPlayer) {
       if (cursors.left.isDown) {
         this.body.setVelocityX(-this.velocity);
         this.currentDirection = Direction.LEFT;
@@ -96,9 +97,16 @@ export default class PlayerContainer extends Phaser.GameObjects.Container {
       }
 
       if (Phaser.Input.Keyboard.JustDown(cursors.space) && !this.playerAttacking) {
-        this.attack();
+        this.weapon.alpha = 1;
+        this.playerAttacking = true;
+        this.attackAudio.play();
+        this.scene.time.delayedCall(150, () => {
+          this.weapon.alpha = 0;
+          this.playerAttacking = false;
+          this.swordHit = false;
+        }, [], this);
       }
-    }
+    
 
     if (this.currentDirection === Direction.UP) {
       this.weapon.setPosition(0, -40);
@@ -136,22 +144,5 @@ export default class PlayerContainer extends Phaser.GameObjects.Container {
 
   updateFlipX() {
     this.player.flipX = this.flipX;
-  }
-
-  attack() {
-    this.weapon.alpha = 1;
-    this.playerAttacking = true;
-    if (this.mainPlayer) this.attackAudio.play();
-    this.scene.time.delayedCall(150, () => {
-      this.weapon.alpha = 0;
-      this.playerAttacking = false;
-      this.swordHit = false;
-    }, [], this);
-  }
-
-  cleanUp() {
-    this.healthBar.destroy();
-    this.player.destroy();
-    this.destroy();
   }
 }

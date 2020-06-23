@@ -1,6 +1,4 @@
-import * as Phaser from 'phaser';
-
-export default class Monster extends Phaser.Physics.Arcade.Image {
+class Monster extends Phaser.Physics.Arcade.Image {
     constructor(scene, x, y, key, frame, id, health, maxHealth) {
         super(scene, x, y, key, frame);
         this.scene = scene;

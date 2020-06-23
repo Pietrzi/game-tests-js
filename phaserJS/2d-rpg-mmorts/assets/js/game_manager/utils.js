@@ -1,8 +1,8 @@
-export const SpawnerType = {
+const SpawnerType = {
     MONSTER: 'MONSTER',
     CHEST: 'CHEST'
 }
 
-export function randomNumber(min, max) {
+function randomNumber(min, max) {
     return Math.floor(Math.random() * max) + min;
 }
