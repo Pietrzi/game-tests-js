@@ -16,15 +16,16 @@ const mongoConfig = {
     useCreateIndex: true,
     useUnifiedTopology: true
 };
+if (process.env.MONGO_USER_NAME && process.env.MONGO_PASSWORD) {
+    mongoConfig.auth = { authSource: 'admin' };
+    mongoConfig.user = process.env.MONGO_USER_NAME;
+    mongoConfig.pass = process.env.MONGO_PASSWORD;
+}
 mongoose.connect(uri, mongoConfig);
 
 mongoose.connection.on('error', error => {
     console.log(error);
     process.exit(1);
-})
-
-mongoose.connection.on('connected', () => {
-    console.log('connected to mongo');
 })
 
 const app = express();
@@ -50,10 +51,14 @@ app.use((req, res) => {
 
 // handle errors
 app.use((error, req, res, next) => {
-    consnole.log(error);
+    console.log(error);
     res.status(error.status || 500).json({ error: error.message, status: 500 })
 })
 
-app.listen(port, () => {
-    console.log(`server is running on port: ${port}`)
+
+mongoose.connection.on('connected', () => {
+    console.log('connected to mongo');
+    app.listen(port, () => {
+        console.log(`server is running on port: ${port}`)
+    })
 })

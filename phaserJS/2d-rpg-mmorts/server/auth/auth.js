@@ -1,20 +1,21 @@
 const passport = require('passport');
 const localStrategy = require('passport-local');
 
+const UserModel = require('../models/UserModel');
+
 // handle user registration
 passport.use('signup', new localStrategy.Strategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-}, (req, email, password, done) => {
-console.log(email, password);
-console.log(req.body);
-
-const { username } = req.body;
-if (username && username !== 'error') {
-    return done(null, { name: Joe });
-}
-return done(new Error('invalid user'))
+}, async (req, email, password, done) => {
+    try {
+        const { username } = req.body;
+        const user = await UserModel.create({ email, password, username });
+        return done(null, user);
+    } catch (error) {
+        return done(error)
+    }
 }));
 
 // handle usel login

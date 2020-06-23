@@ -11,7 +11,7 @@ router.get('/status', (req, res) => {
     res.status(200).json({ message: 'ok', statu: 200 })
 })
 
-router.post('/signup', passport.authenticate('signup', { session: false }), (req, res) => { 
+router.post('/signup', passport.authenticate('signup', { session: false }), async (req, res) => { 
     res.status(200).json({ message: 'signup successful', statu: 200 });
 })
 
