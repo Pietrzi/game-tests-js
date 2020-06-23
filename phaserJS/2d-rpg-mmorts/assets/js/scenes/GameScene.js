@@ -5,7 +5,6 @@ class GameScene extends Phaser.Scene {
 
     init() {
         this.scene.launch('Ui');
-        this.score = 0;
     }
 
     create() {
@@ -24,8 +23,17 @@ class GameScene extends Phaser.Scene {
         this.goldPickupAudio = this.sound.add('goldSound', { loop: false, volume: 0.6 });
     }
 
-    createPlayer(location) {
-        this.player = new PlayerContainer(this, location[0] * 2, location[1] * 2, 'characters', 0);
+    createPlayer(playerObject) {
+        this.player = new PlayerContainer(
+            this,
+            playerObject.x * 2, 
+            playerObject.y * 2, 
+            'characters', 
+            0,
+            playerObject.health,
+            playerObject.maxHealth,
+            playerObject.id
+            );
     }
 
     createGroups() {
@@ -105,13 +113,8 @@ class GameScene extends Phaser.Scene {
     collectChest(player, chest) {
         // play pick gold sound
         this.goldPickupAudio.play();
-        // update score
-        this.score += chest.coins
-        this.events.emit('updateScore', this.score); // updatescore in Ui
-        // make chest object inactive
-        chest.makeInactive();
 
-        this.events.emit('pickUpChest', chest.id);
+        this.events.emit('pickUpChest', chest.id, player.id);
     }
 
     createMap() {
@@ -120,8 +123,8 @@ class GameScene extends Phaser.Scene {
     }
 
     createGameManager() {
-        this.events.on('spawnPlayer', location => {
-            this.createPlayer(location);
+        this.events.on('spawnPlayer', playerObject => {
+            this.createPlayer(playerObject);
             this.addCollisions();
         });
 
@@ -137,6 +140,14 @@ class GameScene extends Phaser.Scene {
             this.monsters.getChildren().forEach( monster => {
                 if (monster.id === monsterId) {
                     monster.makeInactive();
+                }
+            })
+        });
+
+        this.events.on('chestRemoved', chestId => {
+            this.chests.getChildren().forEach( chest => {
+                if (chest.id === chestId) {
+                    chest.makeInactive();
                 }
             })
         });

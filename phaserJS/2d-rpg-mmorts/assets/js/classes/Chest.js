@@ -1,4 +1,6 @@
-class Chest extends Phaser.Physics.Arcade.Image {
+import * as Phaser from 'phaser';
+
+export default class Chest extends Phaser.Physics.Arcade.Image {
     constructor(scene, x, y, key, frame, coins, id) {
         super(scene, x, y, key, frame);
         this.scene = scene; // the scene this game object will be added to

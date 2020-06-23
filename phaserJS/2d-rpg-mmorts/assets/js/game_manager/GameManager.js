@@ -6,6 +6,7 @@ class GameManager {
         this.spawners = {};
         this.chests = {};
         this.monsters = {};
+        this.players = {}
 
         this.playerLocations = [];
         this.chestLocations = {};
@@ -72,10 +73,17 @@ class GameManager {
     }
 
     setupEventListeners() {
-        this.scene.events.on('pickUpChest', chestId => {
+        this.scene.events.on('pickUpChest', (chestId, playerId) => {
             // update the spawer
             if (this.chests[chestId]) {
-                this.spawners[this.chests[chestId].spawnerId].removeObject(chestId)
+              const { gold } = this.chests[chestId];
+              // update players gold
+              this.players[playerId].updateGold(gold);
+              this.scene.events.emit('updateScore', this.players[playerId].gold);
+
+              // removing chest
+              this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
+              this.scene.events.emit('chestRemoved', chestId);
             }
         });
 
@@ -87,6 +95,11 @@ class GameManager {
 
             // check monster health and remove if dead
             if (this.monsters[monsterId].health <= 0) {
+              const { gold } = this.chests[chestId];
+              // update players gold
+              this.players[playerId].updateGold(gold);
+              this.scene.events.emit('updateScore', this.players[playerId].gold);
+
               this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
               this.scene.events.emit('monsterRemoved', monsterId);
             } else {
@@ -136,7 +149,8 @@ class GameManager {
     }
 
     spawnPlayer() {
-        const location = this.playerLocations[Math.floor(Math.random() * this.playerLocations.length)];
+        const player = new PlayerModel(this.playerLocations);
+        this.players[player.id] = player;
         this.scene.events.emit('spawnPlayer', location);
     }
 

@@ -1,18 +1,27 @@
 class MonsterModel {
-    constructor(x, y, gold, spawnerId, frame, health, attack) {
+    constructor(spawnLocations) {
+        this.health = 10;
+        this.maxHealth = 10;
+        this.gold = 0;
         this.id = `${spawnerId}-${uuid.v4}`;
-        this.spawnerId = spawnerId;
-        this.x = x;
-        this.y = y;
-        this.gold = gold;
-        this.frame = frame;
-        this.health = health;
-        this.maxHealth = health;
-        this.attack = attack;
-    }
-
-    loseHealth() {
-        console.log(this.health);
-        this.health -= 1;
-    }
+        this.spawnLocations = spawnLocations;
+    
+        const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
+        [this.x, this.y] = location;
+      }
+    
+      updateGold(gold) {
+        this.gold += gold;
+      }
+    
+      updateHealth(health) {
+        this.health += health;
+        if (this.health > 10) this.health = 10;
+      }
+    
+      respawn() {
+        this.health = this.maxHealth;
+        const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
+        [this.x, this.y] = location;
+      }
 }
