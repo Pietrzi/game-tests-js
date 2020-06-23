@@ -1,27 +1,57 @@
-class MonsterModel {
-    constructor(spawnLocations) {
-        this.health = 10;
-        this.maxHealth = 10;
-        this.gold = 0;
-        this.id = `${spawnerId}-${uuid.v4}`;
-        this.spawnLocations = spawnLocations;
-    
-        const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
-        [this.x, this.y] = location;
+import { randomNumber } from './utils';
+
+export default class MonsterModel {
+    constructor(x, y, gold, spawnerId, frame, health, attack) {
+      this.id = `${spawnerId}-${uuid.v4}`;
+      this.spawnerId = spawnerId;
+      this.x = x * 2;
+      this.y = y * 2;
+      this.gold = gold;
+      this.frame = frame;
+      this.health = health;
+      this.maxHealth = health;
+      this.attack = attack;
+      }
+
+      loseHealth() {
+        this.health -= 1;
       }
     
-      updateGold(gold) {
-        this.gold += gold;
-      }
+      move() {
+        const randomPosition = randomNumber(1, 8);
+        const distance = 64;
     
-      updateHealth(health) {
-        this.health += health;
-        if (this.health > 10) this.health = 10;
-      }
-    
-      respawn() {
-        this.health = this.maxHealth;
-        const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
-        [this.x, this.y] = location;
+        switch (randomPosition) {
+          case 1:
+            this.x += distance;
+            break;
+          case 2:
+            this.x -= distance;
+            break;
+          case 3:
+            this.y += distance;
+            break;
+          case 4:
+            this.y -= distance;
+            break;
+          case 5:
+            this.x += distance;
+            this.y += distance;
+            break;
+          case 6:
+            this.x += distance;
+            this.y -= distance;
+            break;
+          case 7:
+            this.x -= distance;
+            this.y += distance;
+            break;
+          case 8:
+            this.x -= distance;
+            this.y -= distance;
+            break;
+          default:
+            break;
+        }
       }
 }
