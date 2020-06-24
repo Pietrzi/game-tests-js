@@ -43,10 +43,13 @@ app.use(cookieParser());
 app.use(cors({ credentials: true, origin: process.env.CORS_ORIGIN })); // cors to use another server API
 
 // passport
-// app.use(passport.initialize());
-// app.use(passport.session());
-
 require('./auth/auth');
+
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', (req, res) => {
+    res.send(__dirname + '/index.html')
+})
 
 // setup routes
 app.use('/', routes);
@@ -60,7 +63,6 @@ app.use('/', passport.authenticate('jwt', { session: false }), secureRoutes);
 app.use((req, res) => {
     res.status(404).json({ message: '404 - Not Found', status: 404 })
 })
-
 
 
 // handle errors
