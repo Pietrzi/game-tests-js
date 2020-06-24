@@ -7,8 +7,10 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+// routes
 const routes = require('./routes/main');
 const passwordRoutes = require('./routes/password');
+const secureRoutes = require('./routes/secure');
 
 // setup mongo connection
 const uri = process.env.MONGO_CONNEECTION_URI;
@@ -47,6 +49,8 @@ require('./auth/auth');
 // setup routes
 app.use('/', routes);
 app.use('/', passwordRoutes);
+app.use('/', passport.authenticate('jwt', { session: false }), secureRoutes);
+
 
 // middleware
 
