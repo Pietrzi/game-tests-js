@@ -1,4 +1,9 @@
 import * as Phaser from 'phaser';
+import PlayerContainer from '../classes/player/PlayerContainer';
+import GameManager from '../game_manager/GameManager';
+import Chest from '../classes/Chest';
+import Monster from '../classes/Monster';
+import Map from '../classes/Map';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -18,7 +23,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.player) this.player.update(this.cursors); // update z klasy player uruchamia się dopiero jak go tutaj wywołamy
+    // update z klasy player uruchamia się dopiero jak go tutaj wywołamy
+    if (this.player) this.player.update(this.cursors);
   }
 
   createAudio() {
