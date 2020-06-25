@@ -1,0 +1,7 @@
+{
+  "window.zoomLevel": 3,
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "workbench.colorTheme": "Visual Studio Light"
+}

@@ -4,14 +4,14 @@ const ChatModel = require('../models/ChatModel');
 
 const router = express.Router();
 
-router.post('/chat', async (req, res) => {
-  if (!req.body || !req.body.message) {
-    res.status(400).json({ message: 'invalid body', status: 400 });
+router.post('/chat', async (request, response) => {
+  if (!request.body || !request.body.message) {
+    response.status(400).json({ message: 'invalid body', status: 400 });
   } else {
-    const { message } = req.body;
-    const { email } = req.user;
+    const { message } = request.body;
+    const { email } = request.user;
     const chat = await ChatModel.create({ email, message });
-    res.status(200).json({ chat, message: 'message sent', status: 200 });
+    response.status(200).json({ chat, message: 'message sent', status: 200 });
   }
 });
 
