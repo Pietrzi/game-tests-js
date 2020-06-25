@@ -56,8 +56,8 @@ router.post('/forgot-password', async (req, res) => {
         template: 'forgot-password',
         subject: 'MMORPG Password Reset',
         context: {
-        name: 'joe',
-        url: `http://localhost:${process.env.PORT || 3000}/?token=${token}&scene=resetPassword`,
+        name: user.user.name,
+        url: `http://localhost:${process.env.PORT || 3000}/reset-password.html?token=${token}`,
         },
     };
     await smtpTransport.sendMail(emailOptions);
