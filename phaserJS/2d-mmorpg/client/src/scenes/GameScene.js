@@ -12,6 +12,12 @@ export default class GameScene extends Phaser.Scene {
 
   init() {
     this.scene.launch('Ui');
+
+    // get a reference to our socket
+    this.socket = this.sys.game.globals.socket;
+
+    // listen for socket event
+    this.listenForSocketEvents();
   }
 
   create() {
