@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "1.0.0",
-  "description": "",
+  "description": "Client side",
   "main": "src/index.js",
   "scripts": {
     "build": "npx webpack --mode production",
@@ -9,23 +9,24 @@
     "lint": "npx eslint src/ --fix",
     "bundle": "./bundle.sh"
   },
-  "author": "",
+  "author": "Scott Westover",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/preset-env": "^7.10.3",
-    "babel-loader": "^8.1.0",
-    "eslint": "^7.3.1",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.21.2",
-    "raw-loader": "^4.0.1",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "dotenv": "^8.1.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "raw-loader": "^3.1.0",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "nodemon": "^2.0.4",
-    "phaser": "^3.23.0",
-    "uuid": "^8.2.0"
+    "phaser": "^3.18.1",
+    "socket.io-client": "^2.2.0",
+    "uuid": "^3.3.2"
   }
 }
