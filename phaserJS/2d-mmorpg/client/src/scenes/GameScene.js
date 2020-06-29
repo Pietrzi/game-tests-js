@@ -3,7 +3,7 @@ import PlayerContainer from '../classes/player/PlayerContainer';
 import GameManager from '../game_manager/GameManager';
 import Chest from '../classes/Chest';
 import Monster from '../classes/Monster';
-import Map from '../classes/Map';
+import GameMap from '../classes/GameMap';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -133,7 +133,7 @@ export default class GameScene extends Phaser.Scene {
 
   createMap() {
     // create map
-    this.map = new Map(this, 'map', 'background', 'background', 'blocked');
+    this.map = new GameMap(this, 'map', 'background', 'background', 'blocked');
   }
 
   createGameManager() {

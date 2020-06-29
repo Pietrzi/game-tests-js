@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx webpack --mode production",
     "start": "npm run build && npx webpack-dev-server --port=8000 --mode development",
-    "lint": "npx eslint src/ --fix"
+    "lint": "npx eslint src/ --fix",
+    "bundle": "./bundle.sh"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "nodemon": "^2.0.4",
     "phaser": "^3.23.0",
     "uuid": "^8.2.0"
   }
