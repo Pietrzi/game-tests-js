@@ -1,23 +1,34 @@
-const express = require('express');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import passport from 'passport';
+import jwt from 'jsonwebtoken';
 
 const tokenList = {};
 const router = express.Router();
 
-// router.get('/', (request, response) => {
-//   response.send('Hello world');
-// });
+function processLogoutRequest(request, response) {
+  if (request.cookies) {
+    const refreshToken = request.cookies.refreshJwt;
+    if (refreshToken in tokenList) delete tokenList[refreshToken];
+    response.clearCookie('jwt');
+    response.clearCookie('refreshJwt');
+  }
+  if (request.method === 'POST') {
+    response.status(200).json({ message: 'logged out', status: 200 });
+  } else if (request.method === 'GET') {
+    response.sendFile('logout.html', { root: './public' });
+  }
+}
 
 router.get('/status', (request, response) => {
   response.status(200).json({ message: 'ok', status: 200 });
 });
 
-router.post('/signup', passport.authenticate('signup', { session: false }), async (request, response, next) => {
+router.post('/signup', passport.authenticate('signup', { session: false }), async (request, response) => {
   response.status(200).json({ message: 'signup successful', status: 200 });
 });
 
 router.post('/login', async (request, response, next) => {
+  // eslint-disable-next-line consistent-return
   passport.authenticate('login', async (error, user) => {
     try {
       if (error) {
@@ -38,7 +49,9 @@ router.post('/login', async (request, response, next) => {
         };
 
         const token = jwt.sign({ user: body }, process.env.JWT_SECRET, { expiresIn: 300 });
-        const refreshToken = jwt.sign({ user: body }, process.env.JWT_REFRESH_SECRET, { expiresIn: 86400 });
+        const refreshToken = jwt.sign(
+          { user: body }, process.env.JWT_REFRESH_SECRET, { expiresIn: 86400 },
+        );
 
         // store tokens in cookie
         response.cookie('jwt', token);
@@ -87,18 +100,4 @@ router.post('/token', (request, response) => {
   }
 });
 
-function processLogoutRequest(request, response) {
-  if (request.cookies) {
-    const refreshToken = request.cookies.refreshJwt;
-    if (refreshToken in tokenList) delete tokenList[refreshToken];
-    response.clearCookie('jwt');
-    response.clearCookie('refreshJwt');
-  }
-  if (request.method === 'POST') {
-    response.status(200).json({ message: 'logged out', status: 200 });
-  } else if (request.method === 'GET') {
-    response.sendFile('logout.html', { root: './public' });
-  }
-}
-
-module.exports = router;
+export default router;

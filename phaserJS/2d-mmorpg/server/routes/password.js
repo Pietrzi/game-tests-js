@@ -1,10 +1,10 @@
-const express = require('express');
-const hbs = require('nodemailer-express-handlebars');
-const nodemailer = require('nodemailer');
-const path = require('path');
-const crypto = require('crypto');
+import express from 'express';
+import hbs from 'nodemailer-express-handlebars';
+import nodemailer from 'nodemailer';
+import path from 'path';
+import crypto from 'crypto';
 
-const UserModel = require('../models/UserModel');
+import UserModel from '../models/UserModel';
 
 const email = process.env.EMAIL;
 const password = process.env.PASSWORD;
@@ -22,7 +22,7 @@ const handlebarsOptions = {
     extName: '.hbs',
     defaultLayout: null,
     partialsDir: './templates/',
-    layoutsDir: './templates/'
+    layoutsDir: './templates/',
   },
   viewPath: path.resolve('./templates/'),
   extName: '.html',
@@ -45,7 +45,9 @@ router.post('/forgot-password', async (request, response) => {
   const token = buffer.toString('hex');
 
   // update user reset password token and exp
-  await UserModel.findByIdAndUpdate({ _id: user._id }, { resetToken: token, resetTokenExp: Date.now() + 600000 });
+  await UserModel.findByIdAndUpdate(
+    { _id: user._id }, { resetToken: token, resetTokenExp: Date.now() + 600000 },
+  );
 
   // send user password reset email
   const emailOptions = {
@@ -55,7 +57,7 @@ router.post('/forgot-password', async (request, response) => {
     subject: 'Zenva Phaser MMO Password Reset',
     context: {
       name: 'joe',
-      url: `http://localhost:${process.env.PORT || 3000}/reset-password.html?token=${token}`,
+      url: `http://localhost:${process.env.PORT || 3000}/?token=${token}&scene=resetPassword`,
     },
   };
   await smtpTransport.sendMail(emailOptions);
@@ -77,7 +79,8 @@ router.post('/reset-password', async (request, response) => {
   }
 
   // ensure password was provided, and that the password matches the verified password
-  if (!request.body.password || !request.body.verifiedPassword || request.body.password !== request.body.verifiedPassword) {
+  if (!request.body.password || !request.body.verifiedPassword
+    || request.body.password !== request.body.verifiedPassword) {
     response.status(400).json({ message: 'passwords do not match', status: 400 });
     return;
   }
@@ -103,4 +106,4 @@ router.post('/reset-password', async (request, response) => {
   response.status(200).json({ message: 'password updated', status: 200 });
 });
 
-module.exports = router;
+export default router;
